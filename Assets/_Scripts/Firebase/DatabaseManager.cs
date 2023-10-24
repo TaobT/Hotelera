@@ -57,7 +57,7 @@ public class DatabaseManager : MonoBehaviour
         }
 
         Debug.Log("Registrando usuario en la base de datos");
-        //Registrar usuario en la base de datos en la colección "Usuarios"
+        //Registrar usuario en la base de datos en la colecciï¿½n "Usuarios"
         db.Collection("Usuarios").AddAsync(new Dictionary<string, object>
         {
             {"nombre", nombre },
@@ -72,6 +72,46 @@ public class DatabaseManager : MonoBehaviour
                 return;
             }
             Debug.Log("Usuario registrado exitosamente");
+        });
+        return true;
+    }
+
+    public void GetUser(string email)
+    {
+        //return user information
+    }
+    
+
+
+    public bool RegisterReservation(string id_user, string id_hotel, string fecha_entrada, string fecha_salida, float pago)
+    {
+        //Aqui se debe registrar la reservaciÃ³n en la base de datos
+        //Si el registro fue exitoso, retornar true
+        //Si hubo un error, retornar false
+        if(Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return false;
+        }
+
+        Debug.Log("Registrando reservacion en la base de datos");
+        //Registrar usuario en la base de datos en la colecciï¿½n "Reservaciones"
+        db.Collection("Reservaciones").AddAsync(new Dictionary<string, object>
+        {
+            {"usuario", id_user },
+            {"hotel", id_hotel },
+            {"fecha_entrada", fecha_entrada },
+            {"fecha_salida", fecha_salida },
+            {"pago", pago }
+
+        }).ContinueWithOnMainThread(task =>
+        {
+            if(task.IsFaulted)
+            {
+                Debug.LogError($"Error al registrar reservacion: {task.Exception}");
+                return;
+            }
+            Debug.Log("Reservacion registrado exitosamente");
         });
         return true;
     }
