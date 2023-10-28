@@ -13,4 +13,12 @@ MonoBehaviour:
   m_Name: StreamIdDatabase
   m_EditorClassIdentifier: 
   Database:
-    Items: []
+    Items:
+    - Category: HoteleraScene
+      Name: FormHotelSelected
+    - Category: HoteleraScene
+      Name: RegresarAListaHotel
+    - Category: LoginRegister
+      Name: RegisterDone
+    - Category: None
+      Name: None

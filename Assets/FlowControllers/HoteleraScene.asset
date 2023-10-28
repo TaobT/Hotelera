@@ -1,0 +1,524 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8668552475392767125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: 83a928e7-013c-4a59-bb06-f8b12b27caac
+  NodeType: 0
+  NodeName: Pivot
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 83a928e7-013c-4a59-bb06-f8b12b27caac
+    PortId: 136906d1-e0b4-436a-b04f-c77f720b7be5
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 9d4e3b5e-9012-414e-bcbb-48a830986d61
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 83a928e7-013c-4a59-bb06-f8b12b27caac
+    PortId: ac01511c-400f-4d30-9283-a5d8fd054764
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - c3b36613-9c49-434e-9e7d-822666145a78
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1193.6522, y: 176.52177}
+  PivotOrientation: 2
+--- !u!114 &-7767093449008259338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751458f148144184aa69e35c01aecec0, type: 3}
+  m_Name: Start
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: 125c8c1a-4298-4225-a59f-92fd5483a3e0
+  NodeType: 2
+  NodeName: Start
+  NodeDescription: 
+  InputPorts: []
+  OutputPorts:
+  - NodeId: 125c8c1a-4298-4225-a59f-92fd5483a3e0
+    PortId: 4a1d233e-b603-4d93-b2d5-3b799ceffa65
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0e069671-0e2f-46f6-888c-8c55ffa27e25
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 0
+  Passthrough: 1
+  ClearGraphHistory: 1
+  Position: {x: 0, y: 0}
+  SystemNodeType: 0
+--- !u!114 &-2466816525333461240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: a56bd34b-1349-4878-87a1-5000cd919f1c
+  NodeType: 0
+  NodeName: Pivot
+  NodeDescription: 
+  InputPorts:
+  - NodeId: a56bd34b-1349-4878-87a1-5000cd919f1c
+    PortId: 0443ffd9-c471-4cf8-9b10-5af5429caea4
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - bfc696ce-b62c-4937-b0f8-7d953f6fb5aa
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: a56bd34b-1349-4878-87a1-5000cd919f1c
+    PortId: 02752480-a745-40fc-b53e-7ce5eac19c71
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0e069671-0e2f-46f6-888c-8c55ffa27e25
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 105, y: -150}
+  PivotOrientation: 2
+--- !u!114 &-644611975805100230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: 3df175e8-e25e-400e-96e5-3a317d699b62
+  NodeType: 0
+  NodeName: ListaHoteles
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 3df175e8-e25e-400e-96e5-3a317d699b62
+    PortId: 0e069671-0e2f-46f6-888c-8c55ffa27e25
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - 4a1d233e-b603-4d93-b2d5-3b799ceffa65
+    - 02752480-a745-40fc-b53e-7ce5eac19c71
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 3df175e8-e25e-400e-96e5-3a317d699b62
+    PortId: ebc40a2a-40d9-4834-a6f3-6cd5cb79a98d
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - edac783e-6996-49e9-b584-1309cd9b795b
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"HoteleraScene","Name":"NewHotel","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  - NodeId: 3df175e8-e25e-400e-96e5-3a317d699b62
+    PortId: 29d34bf5-f199-47d9-be4e-96ac75372569
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - edac783e-6996-49e9-b584-1309cd9b795b
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"HoteleraScene","Name":"FormHotelSelected","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 181, y: -23}
+  OnEnterShowViews:
+  - Id:
+      Category: HoteleraScene
+      Name: ListaHoteles
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: HoteleraScene
+      Name: ListaHoteles
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &-611490457658676111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: d881557a-f234-426b-af4e-5fff9843820a
+  NodeType: 0
+  NodeName: ConfirmarBorrado
+  NodeDescription: 
+  InputPorts:
+  - NodeId: d881557a-f234-426b-af4e-5fff9843820a
+    PortId: f565e9d7-d139-49c5-b50e-e3aa840c1170
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - eb05dcb8-84c1-4596-afde-0d8dc553c488
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: d881557a-f234-426b-af4e-5fff9843820a
+    PortId: 7bd73173-5ecc-4dce-a6f9-073a64080df6
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - c23b45e9-7d27-4522-b629-e1a7ea67fec3
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"HoteleraScene","Name":"ConfirmDeleteHotel","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  - NodeId: d881557a-f234-426b-af4e-5fff9843820a
+    PortId: 9d4e3b5e-9012-414e-bcbb-48a830986d61
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 136906d1-e0b4-436a-b04f-c77f720b7be5
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"HoteleraScene","Name":"CancelDeleteHotel","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 911.3479, y: 27.6087}
+  OnEnterShowViews:
+  - Id:
+      Category: HoteleraScene
+      Name: ConfirmarBorrado
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: HoteleraScene
+      Name: ConfirmarBorrado
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02761efe598a45c98fa1baf4d446c6a7, type: 3}
+  m_Name: HoteleraScene
+  m_EditorClassIdentifier: 
+  EditorPosition: {x: -308, y: 275, z: 0}
+  EditorScale: {x: 1, y: 1, z: 1}
+  Id: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  GraphName: Flow Graph
+  GraphDescription: 
+  IsSubGraph: 0
+  GraphState: 0
+  OnStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStart:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStop:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPause:
+    m_PersistentCalls:
+      m_Calls: []
+  OnResume:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBackFlow:
+    m_PersistentCalls:
+      m_Calls: []
+  Nodes:
+  - {fileID: -7767093449008259338}
+  - {fileID: -644611975805100230}
+  - {fileID: 1597139402311694080}
+  - {fileID: -2466816525333461240}
+  - {fileID: 1203524758764097926}
+  - {fileID: -611490457658676111}
+  - {fileID: -8668552475392767125}
+  - {fileID: 2382341172361100154}
+  RootNode: {fileID: -7767093449008259338}
+  ActiveNode: {fileID: 0}
+--- !u!114 &1203524758764097926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c01f9a7d07f5c04a9f277379e94a10b, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: 2c7d1ef6-ff52-42c7-b0ce-9e3f06737043
+  NodeType: 0
+  NodeName: FormHotel
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 2c7d1ef6-ff52-42c7-b0ce-9e3f06737043
+    PortId: edac783e-6996-49e9-b584-1309cd9b795b
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - ebc40a2a-40d9-4834-a6f3-6cd5cb79a98d
+    - 29d34bf5-f199-47d9-be4e-96ac75372569
+    - 88f8c636-4460-44e1-bf94-e94b3667d7e2
+    Value: '{"CanGoBack":false}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.GoBackInputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 2c7d1ef6-ff52-42c7-b0ce-9e3f06737043
+    PortId: f0aa4bf9-d771-42df-998e-5976daf9ebc8
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - c23b45e9-7d27-4522-b629-e1a7ea67fec3
+    Value: '{"Trigger":1,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"HoteleraScene","Name":"RegresarAListaHotel","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"None","Name":"None","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  - NodeId: 2c7d1ef6-ff52-42c7-b0ce-9e3f06737043
+    PortId: 9ee80643-84c0-4c02-8cf7-665a159f74b2
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - c23b45e9-7d27-4522-b629-e1a7ea67fec3
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"HoteleraScene","Name":"BackButton","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  - NodeId: 2c7d1ef6-ff52-42c7-b0ce-9e3f06737043
+    PortId: eb05dcb8-84c1-4596-afde-0d8dc553c488
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - f565e9d7-d139-49c5-b50e-e3aa840c1170
+    Value: '{"Trigger":2,"TimeDelay":3.0,"SignalPayload":{"StreamId":{"Category":"None","Name":"None","Custom":false},"SignalValueType":0,"IntegerValue":0,"BooleanValue":false,"FloatValue":0.0,"StringValue":"","ColorValue":{"r":0.0,"g":0.0,"b":0.0,"a":0.0},"Vector2Value":{"x":0.0,"y":0.0},"Vector3Value":{"x":0.0,"y":0.0,"z":0.0},"Vector4Value":{"x":0.0,"y":0.0,"z":0.0,"w":0.0}},"ButtonId":{"Category":"HoteleraScene","Name":"DeleteHotel","Custom":false},"ToggleId":{"Category":"None","Name":"None","Custom":false},"CommandToggle":2,"ViewId":{"Category":"None","Name":"None","Custom":false},"CommandShowHide":0}'
+    ValueTypeQualifiedName: Doozy.Runtime.UIManager.Nodes.PortData.UIOutputPortData,
+      DoozyRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    CanBeDeleted: 1
+    CanBeReordered: 1
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 0
+  ClearGraphHistory: 0
+  Position: {x: 556, y: -23}
+  OnEnterShowViews:
+  - Id:
+      Category: HoteleraScene
+      Name: FormHoteles
+      Custom: 0
+    Mode: 0
+  OnEnterHideViews: []
+  OnExitShowViews: []
+  OnExitHideViews:
+  - Id:
+      Category: HoteleraScene
+      Name: FormHoteles
+      Custom: 0
+    Mode: 0
+  OnEnterHideAllViews: 0
+  OnExitHideAllViews: 0
+--- !u!114 &1597139402311694080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: da56f1f1-eff5-4e98-9278-a139848a7d64
+  NodeType: 0
+  NodeName: Pivot
+  NodeDescription: 
+  InputPorts:
+  - NodeId: da56f1f1-eff5-4e98-9278-a139848a7d64
+    PortId: c23b45e9-7d27-4522-b629-e1a7ea67fec3
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - f0aa4bf9-d771-42df-998e-5976daf9ebc8
+    - 9ee80643-84c0-4c02-8cf7-665a159f74b2
+    - 7bd73173-5ecc-4dce-a6f9-073a64080df6
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: da56f1f1-eff5-4e98-9278-a139848a7d64
+    PortId: bfc696ce-b62c-4937-b0f8-7d953f6fb5aa
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - 0443ffd9-c471-4cf8-9b10-5af5429caea4
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 1141, y: -182}
+  PivotOrientation: 3
+--- !u!114 &2382341172361100154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26771609544c5348b153b61330ee08f, type: 3}
+  m_Name: Pivot
+  m_EditorClassIdentifier: 
+  FlowGraphId: 71df0380-4ddc-40ec-9ba4-f7184476347c
+  NodeId: 32aec892-5d55-4d05-8ccc-ff913f6a14da
+  NodeType: 0
+  NodeName: Pivot
+  NodeDescription: 
+  InputPorts:
+  - NodeId: 32aec892-5d55-4d05-8ccc-ff913f6a14da
+    PortId: c3b36613-9c49-434e-9e7d-822666145a78
+    Direction: 0
+    Capacity: 1
+    Connections:
+    - ac01511c-400f-4d30-9283-a5d8fd054764
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  OutputPorts:
+  - NodeId: 32aec892-5d55-4d05-8ccc-ff913f6a14da
+    PortId: 88f8c636-4460-44e1-bf94-e94b3667d7e2
+    Direction: 1
+    Capacity: 0
+    Connections:
+    - edac783e-6996-49e9-b584-1309cd9b795b
+    Value: 
+    ValueTypeQualifiedName: 
+    CanBeDeleted: 0
+    CanBeReordered: 0
+  RunUpdate: 0
+  RunFixedUpdate: 0
+  RunLateUpdate: 0
+  NodeState: 0
+  CanBeDeleted: 1
+  Passthrough: 1
+  ClearGraphHistory: 0
+  Position: {x: 497.74408, y: 184.05003}
+  PivotOrientation: 3

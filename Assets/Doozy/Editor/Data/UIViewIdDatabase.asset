@@ -13,4 +13,18 @@ MonoBehaviour:
   m_Name: UIViewIdDatabase
   m_EditorClassIdentifier: 
   Database:
-    Items: []
+    Items:
+    - Category: HoteleraScene
+      Name: ConfirmarBorrado
+    - Category: HoteleraScene
+      Name: DetallesHotel
+    - Category: HoteleraScene
+      Name: FormHoteles
+    - Category: HoteleraScene
+      Name: ListaHoteles
+    - Category: LoginRegister
+      Name: Login
+    - Category: LoginRegister
+      Name: Register
+    - Category: None
+      Name: None

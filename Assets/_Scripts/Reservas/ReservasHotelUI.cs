@@ -5,7 +5,7 @@ using UnityEngine;
 public class ReservasHotelUI : MonoBehaviour
 {
     private GameObject reservaUIPf; //Prefab de la reserva
-    [SerializedField] private Transform reservaUIListContent;
+    //[SerializedField] private Transform reservaUIListContent;
 
     void OnEnable()
     {

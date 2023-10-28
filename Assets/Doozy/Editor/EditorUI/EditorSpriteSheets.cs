@@ -23,55 +23,6 @@ namespace Doozy.Editor.EditorUI
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public static class EditorSpriteSheets
     {
-        public static class Bindy
-        {
-            public static class Icons
-            {
-                private static EditorDataSpriteSheetGroup s_spriteSheetGroup;
-                private static EditorDataSpriteSheetGroup spriteSheetGroup =>
-                    s_spriteSheetGroup
-                        ? s_spriteSheetGroup
-                        : s_spriteSheetGroup = EditorDataSpriteSheetDatabase.GetSpriteSheetGroup("Bindy","Icons");
-
-                public static List<Texture2D> GetTextures(SpriteSheetName sheetName) =>
-                    spriteSheetGroup.GetTextures(sheetName.ToString());
-
-                public enum SpriteSheetName
-                {
-                    Bidirectional,
-                    Bind,
-                    Bindable,
-                    Binder,
-                    Bindy,
-                    BindyDatabase,
-                    FrameBased,
-                    RealTime,
-                    Receiver,
-                    Sender,
-                    TimeBased,
-                    Transformer
-                }
-                
-
-                public static List<Texture2D> Bidirectional => GetTextures(SpriteSheetName.Bidirectional);
-                public static List<Texture2D> Bind => GetTextures(SpriteSheetName.Bind);
-                public static List<Texture2D> Bindable => GetTextures(SpriteSheetName.Bindable);
-                public static List<Texture2D> Binder => GetTextures(SpriteSheetName.Binder);
-                public static List<Texture2D> Bindy => GetTextures(SpriteSheetName.Bindy);
-                public static List<Texture2D> BindyDatabase => GetTextures(SpriteSheetName.BindyDatabase);
-                public static List<Texture2D> FrameBased => GetTextures(SpriteSheetName.FrameBased);
-                public static List<Texture2D> RealTime => GetTextures(SpriteSheetName.RealTime);
-                public static List<Texture2D> Receiver => GetTextures(SpriteSheetName.Receiver);
-                public static List<Texture2D> Sender => GetTextures(SpriteSheetName.Sender);
-                public static List<Texture2D> TimeBased => GetTextures(SpriteSheetName.TimeBased);
-                public static List<Texture2D> Transformer => GetTextures(SpriteSheetName.Transformer);
-                
-            }
-
-
-        }
-
-
         public static class EditorUI
         {
             public static class Arrows

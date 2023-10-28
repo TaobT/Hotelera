@@ -1,14 +1,19 @@
+using Doozy.Runtime.Signals;
+using Doozy.Runtime.UIManager.Components;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RegisterUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI nombreInput;
-    [SerializeField] private TextMeshProUGUI apellidosInput;
-    [SerializeField] private TextMeshProUGUI emailInput;
-    [SerializeField] private TextMeshProUGUI passwordInput;
-    [SerializeField] private TextMeshProUGUI passwordConfirmInput;
+    [SerializeField] private TMP_InputField nombreInput;
+    [SerializeField] private TMP_InputField apellidosInput;
+    [SerializeField] private TMP_InputField emailInput;
+    [SerializeField] private TMP_InputField passwordInput;
+    [SerializeField] private TMP_InputField passwordConfirmInput;
+    [SerializeField] private UIToggle clientToggle;
     [SerializeField] private Button registrarBtn;
 
     private void Start()
@@ -20,9 +25,18 @@ public class RegisterUI : MonoBehaviour
     {
         if(!ValidateInputs()) return;
 
-        DatabaseManager.Instance.RegisterUser(nombreInput.text, apellidosInput.text, emailInput.text, passwordInput.text);   
+        string userType = clientToggle.isOn ? "client" : "owner";
+        DatabaseManager.Instance.RegisterUser(nombreInput.text, apellidosInput.text, emailInput.text, passwordInput.text, userType);   
+
+        //Clean inputs
+        nombreInput.text = "";
+        apellidosInput.text = "";
+        emailInput.text = "";
+        passwordInput.text = "";
+        passwordConfirmInput.text = "";
 
         //Return to Login Scene?
+        Signal.Send("LoginRegister", "RegisterDone");
     }
 
     private bool ValidateInputs()
