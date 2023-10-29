@@ -23,6 +23,8 @@ MonoBehaviour:
     - Category: HoteleraScene
       Name: DeleteHotel
     - Category: HoteleraScene
+      Name: ManageHotel
+    - Category: HoteleraScene
       Name: NewHotel
     - Category: LoginRegister
       Name: GoLogin

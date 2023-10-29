@@ -30,6 +30,7 @@ namespace Doozy.Runtime.UIManager
     {
         public enum HoteleraScene
         {
+            ComentariosHotel,
             ConfirmarBorrado,
             DetallesHotel,
             FormHoteles,

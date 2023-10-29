@@ -54,7 +54,7 @@ public class ListaHotelesUI : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         foreach (HotelInformation hotel in hotels)
         {
             GameObject listaHotelUI = Instantiate(listaHotelUIPf, listaHotelUIContent);
@@ -62,25 +62,25 @@ public class ListaHotelesUI : MonoBehaviour
         }
     }
 
-    private void GetAllHotels()
+    private async void GetAllHotels()
     {
         if(loadHotelesCoroutine != null)
         {
             StopCoroutine(loadHotelesCoroutine);
         }
         hotels = new List<HotelInformation>();
-        hotels = DatabaseManager.Instance.GetHoteles();
+        hotels = await DatabaseManager.Instance.GetHoteles();
         StartCoroutine(LoadHoteles());
     }
 
-    private void OnOwnerHotelSearchFieldChange(string value)
+    private async void OnOwnerHotelSearchFieldChange(string value)
     {
         if(loadHotelesCoroutine != null)
         {
             StopCoroutine(loadHotelesCoroutine);
         }
         hotels = new List<HotelInformation>();
-        hotels = DatabaseManager.Instance.GetHotelsWithFilter(value);
+        hotels = await DatabaseManager.Instance.GetHotelsWithFilter(value);
         loadHotelesCoroutine = StartCoroutine(LoadHoteles());
     }
 

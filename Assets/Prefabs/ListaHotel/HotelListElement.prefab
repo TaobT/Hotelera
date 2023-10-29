@@ -414,10 +414,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5441430390108504016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: -100, y: 1390}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 850}
+  m_SizeDelta: {x: 1340, y: 1390}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1173365017424147380
 CanvasRenderer:
@@ -548,6 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34147515956c70046a026877973e19a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hotelImage: {fileID: 2316982811203799368}
   ubicationText: {fileID: 2536205693614726984}
   califText: {fileID: 5408301437097034159}
   precioText: {fileID: 267688773252938387}

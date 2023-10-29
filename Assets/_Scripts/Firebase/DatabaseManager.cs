@@ -3,12 +3,15 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using Firebase.Storage;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 
 public class DatabaseManager : MonoBehaviour
 {
@@ -178,6 +181,11 @@ public class DatabaseManager : MonoBehaviour
 
     #region Hoteles
 
+    public void DeleteHotel(string id)
+    {
+        db.Collection("Hoteles").Document(id).DeleteAsync();
+    }
+
     public async void RegisterHotel(string nombre, string pais, string ciudad, string direccion, string descripcion, float precioMayores, float precioMenores, int cantidadHabitaciones,
         bool servicioALaHabitacion, bool servicioPiscina, bool servicioRestaurante, bool servicioGimnasio, List<string> fotosUbication)
     {
@@ -259,25 +267,22 @@ public class DatabaseManager : MonoBehaviour
 
         }
 
-        Dictionary<string, object> hotelFotos = new Dictionary<string, object>();
-
-        for(int i = 0; i < fotosUrl.Count + 1; i++)
+        //Actualizar el hotel con las urls de las fotos
+        await db.Collection("Hoteles").Document(hotelId).UpdateAsync(new Dictionary<string, object>
         {
-            hotelFotos.Add($"foto{i}", fotosUrl[i]);
-        }
-
-        await db.Collection("Hoteles").Document(hotelId).Collection("Fotos").AddAsync(hotelFotos).ContinueWithOnMainThread(task =>
+            {"fotos", fotosUrl }
+        }).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError($"Error al guardar fotos en la base de datos: {task.Exception}");
+                Debug.LogError($"Error al actualizar hotel: {task.Exception}");
                 return;
             }
-            Debug.Log("Fotos guardadas exitosamente");
+            Debug.Log("Hotel actualizado exitosamente");
         });
     }
 
-    public List<HotelInformation> GetHoteles()
+    public async Task<List<HotelInformation>> GetHoteles()
     {
         List<HotelInformation> hoteles = new List<HotelInformation>();
         //return user information
@@ -287,169 +292,346 @@ public class DatabaseManager : MonoBehaviour
             return hoteles;
         }
         Debug.Log("Obteniendo hoteles de la base de datos");
-        //Obtener usuario de la base de datos en la colección "Usuarios" que coincida con el email
-        db.Collection("Hoteles").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+
+        QuerySnapshot hotelesSnapshot = await db.Collection("Hoteles").GetSnapshotAsync();
+
+        if(hotelesSnapshot == null)
         {
-            if (task.IsFaulted)
+            Debug.LogError("Error al obtener hoteles");
+            return hoteles;
+        }
+
+        foreach(DocumentSnapshot document in hotelesSnapshot.Documents)
+        {
+            if (document.Exists)
             {
-                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
-            }
-            Debug.Log("Hoteles obtenidos exitosamente");
-            QuerySnapshot snapshot = task.Result;
-            //int hotelsAdded = 0;
-            foreach (DocumentSnapshot document in snapshot.Documents)
-            {
-                if (document.Exists)
+                Debug.Log("Hotel encontrado");
+                List<string> fotosUrl = new List<string>();
+                //Get "Fotos" child document of the hotel
+                CollectionReference fotosReference = db.Collection("Hoteles").Document(document.Id).Collection("Fotos");
+                QuerySnapshot fotosSnapshot = await fotosReference.GetSnapshotAsync();
+                if (fotosSnapshot != null)
                 {
-                    Debug.Log("Hotel encontrado");
+                    foreach (DocumentSnapshot foto in fotosSnapshot.Documents)
+                    {
+                        if (foto.Exists)
+                        {
+                            Debug.Log("Foto encontrada");
+                            fotosUrl.Add(foto.GetValue<string>("foto"));
+                        }
+                        else
+                        {
+                            Debug.LogError("Foto no encontrada");
+                        }
+                    }
+
                     hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
-                        document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
-                        document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
-                        document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
-                        document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
-                        document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio")));
+                    document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
+                    document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
+                    document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
+                    document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
+                    document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio"), fotosUrl));
+                }
+                else
+                {
+                    Debug.LogError("Fotos no encontradas");
                 }
             }
-        });
+            else
+            {
+                Debug.LogError("Hotel no encontrado");
+            }
+        }
+
         return hoteles;
     }
 
-    public List<HotelInformation> GetHotelsWithFilter(string filter, bool includeHotelName = false)
+    public async Task<List<HotelInformation>> GetHotelsWithFilter(string filter, bool includeHotelName = false)
     {
         //Obtener cualquier coincidencia con el filtro en los campos de pais, ciudad, direccion y nombre
-        List<HotelInformation> hoteles = new List<HotelInformation>();
+        List<Task<List<HotelInformation>>> tasks = new List<Task<List<HotelInformation>>>();
         //return user information
         if (Instance == null)
         {
             Debug.LogError("No se ha inicializado el DatabaseManager");
-            return hoteles;
+            return null;
         }
 
         Debug.Log("Obteniendo hoteles de la base de datos");
         //Obtener hoteles de la base de datos en la colección "Hoteles" que coincida con el filtro de ubicación
-        
+
         //Agregar hoteles donde el pais coincida con el filtro
-        db.Collection("Hoteles").WhereEqualTo("pais", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
-            }
-            Debug.Log("Hoteles obtenidos exitosamente");
-            QuerySnapshot snapshot = task.Result;
-            //int hotelsAdded = 0;
-            foreach (DocumentSnapshot document in snapshot.Documents)
-            {
-                if (document.Exists)
-                {
-                    Debug.Log("Hotel encontrado");
-                    hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
-                    document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
-                    document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
-                    document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
-                    document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
-                    document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio")));
-                }
-            }
-        });
+        tasks.Add(GetHotelsByCountry(filter));
 
         //Agregar hoteles donde la ciudad coincida con el filtro
-        db.Collection("Hoteles").WhereEqualTo("ciudad", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
-            }
-            Debug.Log("Hoteles obtenidos exitosamente");
-            QuerySnapshot snapshot = task.Result;
-            //int hotelsAdded = 0;
-            foreach (DocumentSnapshot document in snapshot.Documents)
-            {
-                if (document.Exists)
-                {
-                    Debug.Log("Hotel encontrado");
-                    hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
-                    document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
-                    document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
-                    document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
-                    document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"), document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio")));
-                }
-            }
-        });
+        tasks.Add(GetHotelsByCity(filter));
 
         //Agregar hoteles donde la direccion coincida con el filtro
-        db.Collection("Hoteles").WhereEqualTo("direccion", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            if (task.IsFaulted)
-            {
-                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
-            }
-            Debug.Log("Hoteles obtenidos exitosamente");
-            QuerySnapshot snapshot = task.Result;
-            //int hotelsAdded = 0;
-            foreach (DocumentSnapshot document in snapshot.Documents)
-            {
-                if (document.Exists)
-                {
-                    Debug.Log("Hotel encontrado");
-                    hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
-                    document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
-                    document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
-                    document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
-                    document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
-                    document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio")));
-                }
-            }
-        });
+        tasks.Add(GetHotelsByAddress(filter));
 
         //Agregar hoteles donde el nombre coincida con el filtro
         if (includeHotelName)
         {
-            db.Collection("Hoteles").WhereEqualTo("nombre", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            tasks.Add(GetHotelsByName(filter));
+        }
+
+        //Esperar a que todas las tareas terminen
+        await Task.WhenAll(tasks);
+
+        // Combina los resultados de todas las tareas en una sola lista
+        List<HotelInformation> hoteles = tasks.SelectMany(task => task.Result).ToList();
+
+        return hoteles;
+    }
+
+    private async Task<List<HotelInformation>> GetHotelsByCountry(string filter)
+    {
+        List<HotelInformation> hoteles = new List<HotelInformation>();
+
+        //Agregar hoteles donde el pais coincida con el filtro
+        await db.Collection("Hoteles").WhereEqualTo("pais", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
             {
-                if (task.IsFaulted)
+                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
+            }
+            Debug.Log("Hoteles obtenidos exitosamente");
+            QuerySnapshot snapshot = task.Result;
+            //int hotelsAdded = 0;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
                 {
-                    Debug.LogError($"Error al obtener hoteles: {task.Exception}");
-                }
-                Debug.Log("Hoteles obtenidos exitosamente");
-                QuerySnapshot snapshot = task.Result;
-                //int hotelsAdded = 0;
-                foreach (DocumentSnapshot document in snapshot.Documents)
-                {
-                    if (document.Exists)
+                    Debug.Log("Hotel encontrado");
+                    //Get sprites from firebase storage and add them to the hotel
+                    //Get hotel photos
+                    List<string> fotosUrl = new List<string>();
+                    db.Collection("Hoteles").Document(document.Id).Collection("Fotos").GetSnapshotAsync().ContinueWithOnMainThread(task =>
                     {
-                        Debug.Log("Hotel encontrado");
+                        if (task.IsFaulted)
+                        {
+                            Debug.LogError($"Error al obtener fotos de hotel: {task.Exception}");
+                            return;
+                        }
+                        QuerySnapshot snapshot = task.Result;
+                        foreach (DocumentSnapshot document in snapshot.Documents)
+                        {
+                            if (document.Exists)
+                            {
+                                Debug.Log("Foto encontrada");
+                                fotosUrl.Add(document.GetValue<string>("foto"));
+                            }
+                        }
+
                         hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
                         document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
                         document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
                         document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
                         document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
-                        document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio")));
-                    }
+                        document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio"), fotosUrl));
+                    });
                 }
-            });
-        }
+            }
+        });
 
         return hoteles;
     }
 
-    public void DeleteHotel(string id)
+    private async Task<List<HotelInformation>> GetHotelsByCity(string filter)
     {
-        if (Instance == null)
-        {
-            Debug.LogError("No se ha inicializado el DatabaseManager");
-            return;
-        }
-        Debug.Log("Eliminando hotel de la base de datos");
-        //Eliminar hotel de la base de datos en la colección "Hoteles" con el id especificado
-        db.Collection("Hoteles").Document(id).DeleteAsync().ContinueWithOnMainThread(task =>
+        List<HotelInformation> hoteles = new List<HotelInformation>();
+
+        //Agregar hoteles donde la ciudad coincida con el filtro
+        await db.Collection("Hoteles").WhereEqualTo("ciudad", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError($"Error al eliminar hotel: {task.Exception}");
+                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
             }
-            Debug.Log("Hotel eliminado exitosamente");
+            Debug.Log("Hoteles obtenidos exitosamente");
+            QuerySnapshot snapshot = task.Result;
+            //int hotelsAdded = 0;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Debug.Log("Hotel encontrado");
+                    //Get sprites from firebase storage and add them to the hotel
+                    //Get hotel photos
+                    List<string> fotosUrl = new List<string>();
+                    db.Collection("Hoteles").Document(document.Id).Collection("Fotos").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            Debug.LogError($"Error al obtener fotos de hotel: {task.Exception}");
+                            return;
+                        }
+                        QuerySnapshot snapshot = task.Result;
+                        foreach (DocumentSnapshot document in snapshot.Documents)
+                        {
+                            if (document.Exists)
+                            {
+                                Debug.Log("Foto encontrada");
+                                fotosUrl.Add(document.GetValue<string>("foto"));
+                            }
+                        }
+                    });
+
+                    hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
+                    document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
+                    document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
+                    document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
+                    document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
+                    document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio"), fotosUrl));
+                }
+            }
         });
+
+        return hoteles;
+    }
+
+    private async Task<List<HotelInformation>> GetHotelsByAddress(string filter)
+    {
+        List<HotelInformation> hoteles = new List<HotelInformation>();
+
+        //Agregar hoteles donde la direccion coincida con el filtro
+        await db.Collection("Hoteles").WhereEqualTo("direccion", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
+            }
+            Debug.Log("Hoteles obtenidos exitosamente");
+            QuerySnapshot snapshot = task.Result;
+
+
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Debug.Log("Hotel encontrado");
+                    //Get sprites from firebase storage and add them to the hotel
+                    //Get hotel photos
+                    List<string> fotosUrl = new List<string>();
+                    db.Collection("Hoteles").Document(document.Id).Collection("Fotos").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            Debug.LogError($"Error al obtener fotos de hotel: {task.Exception}");
+                            return;
+                        }
+                        QuerySnapshot snapshot = task.Result;
+                        foreach (DocumentSnapshot document in snapshot.Documents)
+                        {
+                            if (document.Exists)
+                            {
+                                Debug.Log("Foto encontrada");
+                                fotosUrl.Add(document.GetValue<string>("foto"));
+                            }
+                        }
+
+                        hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
+                        document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
+                        document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
+                        document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
+                        document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
+                        document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio"), fotosUrl));
+                    });
+
+                }
+            }
+        });
+
+        return hoteles;
+    }
+
+    private async Task<List<HotelInformation>> GetHotelsByName(string filter)
+    {
+        List<HotelInformation> hoteles = new List<HotelInformation>();
+
+        await db.Collection("Hoteles").WhereEqualTo("nombre", filter).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener hoteles: {task.Exception}");
+            }
+            Debug.Log("Hoteles obtenidos exitosamente");
+            QuerySnapshot snapshot = task.Result;
+
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Debug.Log("Hotel encontrado");
+                    //Get sprites from firebase storage and add them to the hotel
+                    //Get hotel photos
+                    List<string> fotosUrl = new List<string>();
+                    db.Collection("Hoteles").Document(document.Id).Collection("Fotos").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            Debug.LogError($"Error al obtener fotos de hotel: {task.Exception}");
+                            return;
+                        }
+                        QuerySnapshot snapshot = task.Result;
+                        foreach (DocumentSnapshot document in snapshot.Documents)
+                        {
+                            if (document.Exists)
+                            {
+                                Debug.Log("Foto encontrada");
+                                fotosUrl.Add(document.GetValue<string>("foto"));
+                            }
+                        }
+
+                        hoteles.Add(new HotelInformation(document.Id, document.GetValue<string>("nombre"),
+                        document.GetValue<string>("direccion"), document.GetValue<string>("ciudad"), document.GetValue<string>("direccion"), document.GetValue<string>("descripcion"),
+                        document.GetValue<int>("calificacion"), document.GetValue<int>("cantidadHabitaciones"),
+                        document.GetValue<float>("precioMayores"), document.GetValue<float>("precioMenores"),
+                        document.GetValue<bool>("servicioALaHabitacion"), document.GetValue<bool>("servicioPiscina"),
+                        document.GetValue<bool>("servicioRestaurante"), document.GetValue<bool>("servicioGimnasio"), fotosUrl));
+
+                    });
+                }
+            }
+        });
+
+        return hoteles;
+    }
+
+    //private IEnumerator DownloadHotelSprites(List<string> fotoUrl, Action<List<Sprite>> callback)
+    //{
+    //    List<Sprite> fotos = new List<Sprite>();
+    //    foreach (string url in fotoUrl)
+    //    {
+    //        StartCoroutine(GetSpriteFromUrl(url, sprite =>
+    //        {
+    //            fotos.Add(sprite);
+    //        }));
+    //    }
+    //    callback(fotos);
+    //    yield 
+    //}
+
+    //private IEnumerator EsperarCorrutina(TaskCompletionSource<bool> tcs, )
+    //{
+
+    //}
+
+    private IEnumerator GetSpriteFromUrl(string url, Action<Sprite> callback)
+    {
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
+        {
+            yield return www.SendWebRequest();
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError($"Error al obtener la imagen: {www.error}");
+            }
+            else
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                callback(Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero));
+            }
+        }
     }
 
     public void UpdateHotel(string id, string nombre, string pais, string ciudad, string direccion, string descripcion, float precioMayores, float precioMenores, int cantidadHabitaciones,

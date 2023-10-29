@@ -24,7 +24,8 @@ public class FormularioHotelUI : MonoBehaviour
     [SerializeField] private Toggle servicioRestaurante;
     [SerializeField] private Toggle servicioGimnasio;
 
-    [SerializeField] private GameObject borrarHotelBtn;
+    [SerializeField] private GameObject borrarModal;
+    [SerializeField] private Button borrarHotelBtn;
     [SerializeField] private Button saveHotelBtn;
     [SerializeField] private Button salirFormBtn;
 
@@ -39,6 +40,7 @@ public class FormularioHotelUI : MonoBehaviour
     {
         saveHotelBtn.onClick.AddListener(OnSaveHotelBtnClick);
         salirFormBtn.onClick.AddListener(OnSalirFormBtnClick);
+        borrarHotelBtn.onClick.AddListener(OnDeleteHotelBtnClick);
     }
 
     public void VerificarHotelSelected()
@@ -158,6 +160,11 @@ public class FormularioHotelUI : MonoBehaviour
         servicioGimnasio.isOn = HotelSelected.Singleton.GetHotelInformation().servicioGimnasio;
 
         borrarHotelBtn.gameObject.SetActive(true);
+    }
+
+    private void OnDeleteHotelBtnClick()
+    {
+        borrarModal.gameObject.SetActive(true);
     }
 
     private void OnSaveHotelBtnClick()

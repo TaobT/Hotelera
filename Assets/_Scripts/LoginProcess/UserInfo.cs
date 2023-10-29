@@ -59,8 +59,10 @@ public class HotelInformation
     public bool servicioPiscina;
     public bool servicioRestaurante;
     public bool servicioGimnasio;
+    public List<string> hotelSpritesUrl;
 
-    public HotelInformation(string id, string nombre, string pais, string ciudad, string direccion, string descripcion, float calificacionPromedio, int cantidadHabitaciones, float precioHabitacionesAdultos, float precioHabitacionesMenores, bool servicioALaHabitacion, bool servicioPiscina, bool servicioRestaurante, bool servicioGimnasio)
+    public HotelInformation(string id, string nombre, string pais, string ciudad, string direccion, string descripcion, float calificacionPromedio, int cantidadHabitaciones, float precioHabitacionesAdultos, float precioHabitacionesMenores, bool servicioALaHabitacion,
+        bool servicioPiscina, bool servicioRestaurante, bool servicioGimnasio)
     {
         this.id = id;
         this.nombre = nombre;
@@ -76,5 +78,30 @@ public class HotelInformation
         this.servicioPiscina = servicioPiscina;
         this.servicioRestaurante = servicioRestaurante;
         this.servicioGimnasio = servicioGimnasio;
+    }
+
+    public HotelInformation(string id, string nombre, string pais, string ciudad, string direccion, string descripcion, float calificacionPromedio, int cantidadHabitaciones, float precioHabitacionesAdultos, float precioHabitacionesMenores, bool servicioALaHabitacion, 
+        bool servicioPiscina, bool servicioRestaurante, bool servicioGimnasio, List<string> hotelSpritesUrl)
+    {
+        this.id = id;
+        this.nombre = nombre;
+        this.pais = pais;
+        this.ciudad = ciudad;
+        this.direccion = direccion;
+        this.descripcion = descripcion;
+        this.calificacionPromedio = calificacionPromedio;
+        this.cantidadHabitaciones = cantidadHabitaciones;
+        this.precioHabitacionesAdultos = precioHabitacionesAdultos;
+        this.precioHabitacionesMenores = precioHabitacionesMenores;
+        this.servicioALaHabitacion = servicioALaHabitacion;
+        this.servicioPiscina = servicioPiscina;
+        this.servicioRestaurante = servicioRestaurante;
+        this.servicioGimnasio = servicioGimnasio;
+        this.hotelSpritesUrl = hotelSpritesUrl;
+    }
+
+    public void SetSpritesUrl(List<string> spriteUrls)
+    {
+        hotelSpritesUrl = spriteUrls;
     }
 }
