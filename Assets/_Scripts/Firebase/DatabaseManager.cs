@@ -350,7 +350,7 @@ public class DatabaseManager : MonoBehaviour
                         if (document.Exists)
                         {
                             Debug.Log("Foto encontrada");
-                            fotosUrl.Add(document.GetValue<string>("url"));
+                            fotosUrl.Add(document.GetValue<string>("foto"));
                         }
                     }
                 }
