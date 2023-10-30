@@ -282,6 +282,104 @@ public class DatabaseManager : MonoBehaviour
         });
     }
 
+
+    public async void UpdateHotelCalification(string id_hotel)
+    {
+        //Actualizar la calificacion del hotel con todos los comentarios que tenga
+        
+        if(Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+
+        Debug.Log("Actualizando calificacion del hotel en la base de datos");
+        //Obtener todos los comentarios del hotel
+        QuerySnapshot commentsSnapshot = await db.Collection("Hoteles").Document(id_hotel).Collection("Comentarios").GetSnapshotAsync();
+        if (commentsSnapshot != null)
+        {
+            //Calcular la calificacion del hotel
+            float calificacion = 0;
+            foreach (DocumentSnapshot document in commentsSnapshot.Documents)
+            {
+                calificacion += document.GetValue<float>("calificacion");
+            }
+            calificacion /= commentsSnapshot.Documents.Count();
+            //Actualizar la calificacion del hotel
+            await db.Collection("Hoteles").Document(id_hotel).UpdateAsync(new Dictionary<string, object>
+            {
+                {"calificacion", calificacion }
+            }).ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError($"Error al actualizar calificacion del hotel: {task.Exception}");
+                    return;
+                }
+                Debug.Log("Calificacion del hotel actualizada exitosamente");
+            });
+        }
+    }
+
+    public async Task<HotelInformation> GetHotel(string id)
+    {
+        HotelInformation hotelInformation = null;
+        //return user information
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return hotelInformation;
+        }
+
+        Debug.Log("Obteniendo hotel de la base de datos");
+
+        DocumentSnapshot hotelSnapshot = await db.Collection("Hoteles").Document(id).GetSnapshotAsync();
+        if (hotelSnapshot != null)
+        {
+            if (hotelSnapshot.Exists)
+            {
+                Debug.Log("Hotel encontrado");
+                List<string> fotosUrl = new List<string>();
+                //Get "Fotos" child document of the hotel
+                CollectionReference fotosReference = db.Collection("Hoteles").Document(id).Collection("Fotos");
+                QuerySnapshot fotosSnapshot = await fotosReference.GetSnapshotAsync();
+                if (fotosSnapshot != null)
+                {
+                    foreach (DocumentSnapshot document in fotosSnapshot.Documents)
+                    {
+                        if (document.Exists)
+                        {
+                            Debug.Log("Foto encontrada");
+                            fotosUrl.Add(document.GetValue<string>("url"));
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Error al obtener fotos");
+                    return hotelInformation;
+                }
+                hotelInformation = new HotelInformation(hotelSnapshot.Id, hotelSnapshot.GetValue<string>("nombre"), hotelSnapshot.GetValue<string>("pais"),
+                    hotelSnapshot.GetValue<string>("ciudad"), hotelSnapshot.GetValue<string>("direccion"), hotelSnapshot.GetValue<string>("descripcion"),
+                    hotelSnapshot.GetValue<float>("calificacion"), hotelSnapshot.GetValue<int>("cantidadHabitaciones"),hotelSnapshot.GetValue<float>("precioMayores"), hotelSnapshot.GetValue<float>("precioMenores"),
+                    hotelSnapshot.GetValue<bool>("servicioALaHabitacion"), hotelSnapshot.GetValue<bool>("servicioPiscina"),
+                    hotelSnapshot.GetValue<bool>("servicioRestaurante"), hotelSnapshot.GetValue<bool>("servicioGimnasio"));
+            }
+            else
+            {
+                Debug.LogError("Hotel no encontrado");
+                return hotelInformation;
+            }
+        }
+        else
+        {
+            Debug.LogError("Error al obtener hotel");
+            return hotelInformation;
+        }
+
+        return hotelInformation;
+    }
+
     public async Task<List<HotelInformation>> GetHoteles()
     {
         List<HotelInformation> hoteles = new List<HotelInformation>();
@@ -666,6 +764,310 @@ public class DatabaseManager : MonoBehaviour
                 Debug.LogError($"Error al actualizar hotel: {task.Exception}");
             }
             Debug.Log("Hotel actualizado exitosamente");
+        });
+    }
+    #endregion
+
+    #region Reservas
+    public void RegisterReserve(string id_hotel, string id_usuario, DateTime fecha_entrada, DateTime fecha_salida)
+    {
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+        Debug.Log("Registrando reserva en la base de datos");
+        //Registrar reserva en la base de datos en la colección "Reservas"
+        db.Collection("Reservas").AddAsync(new Dictionary<string, object>
+        {
+            {"id_hotel", id_hotel},
+            {"id_usuario", id_usuario},
+            {"fecha_entrada", fecha_entrada},
+            {"fecha_salida", fecha_salida},
+            {"estado", "Pendiente"}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al registrar reserva: {task.Exception}");
+            }
+            Debug.Log("Reserva registrada exitosamente");
+        });
+    }
+
+    public void UpdateReserveState(string id, string estado)
+    {
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+        Debug.Log("Actualizando estado de reserva en la base de datos");
+        //Actualizar estado de reserva en la base de datos en la colección "Reservas" con el id especificado
+        db.Collection("Reservas").Document(id).UpdateAsync(new Dictionary<string, object>
+        {
+            {"estado", estado}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al actualizar estado de reserva: {task.Exception}");
+            }
+            Debug.Log("Estado de reserva actualizado exitosamente");
+        });
+    }
+
+    public async Task<List<ReserveInformation>> GetReservesOfUser(string id_usuario)
+    {
+        //Traer todas las reservas del usuario
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return null;
+        }
+        List<ReserveInformation> reserves = new List<ReserveInformation>();
+        TaskCompletionSource<List<ReserveInformation>> tcs = new TaskCompletionSource<List<ReserveInformation>>();
+        await db.Collection("Reservas").WhereEqualTo("id_usuario", id_usuario).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener reservas de usuario: {task.Exception}");
+                tcs.SetException(task.Exception);
+                return;
+            }
+            QuerySnapshot snapshot = task.Result;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                reserves.Add(new ReserveInformation(document.Id, document.GetValue<string>("id_hotel"), document.GetValue<string>("id_usuario"),
+                                       document.GetValue<DateTime>("fecha_entrada"), document.GetValue<DateTime>("fecha_salida"), document.GetValue<string>("estado")));
+            }
+            tcs.SetResult(reserves);
+        });
+        return await tcs.Task;
+    }
+    
+    public async Task<List<ReserveInformation>> GetReservesOfOwner(string id_owner)
+    {
+        //Para este proceso hay que traer primero todos los hoteles del dueño
+        //Despues traer todas las reservas de cada hotel
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return null;
+        }
+
+        List<ReserveInformation> reserves = new List<ReserveInformation>();
+        TaskCompletionSource<List<ReserveInformation>> tcs = new TaskCompletionSource<List<ReserveInformation>>();
+        await db.Collection("Hoteles").WhereEqualTo("id_owner", id_owner).GetSnapshotAsync().ContinueWithOnMainThread(async task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener hoteles de dueño: {task.Exception}");
+                tcs.SetException(task.Exception);
+                return;
+            }
+            QuerySnapshot snapshot = task.Result;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                await db.Collection("Reservas").WhereEqualTo("id_hotel", document.Id).GetSnapshotAsync().ContinueWithOnMainThread(task2 =>
+                {
+                    if (task2.IsFaulted)
+                    {
+                        Debug.LogError($"Error al obtener reservas de hotel: {task2.Exception}");
+                        tcs.SetException(task2.Exception);
+                        return;
+                    }
+                    QuerySnapshot snapshot2 = task2.Result;
+                    foreach (DocumentSnapshot document2 in snapshot2.Documents)
+                    {
+                        reserves.Add(new ReserveInformation(document2.Id, document2.GetValue<string>("id_hotel"), document2.GetValue<string>("id_usuario"),
+                                                                          document2.GetValue<DateTime>("fecha_entrada"), document2.GetValue<DateTime>("fecha_salida"), document2.GetValue<string>("estado")));
+                    }
+                });
+            }
+            tcs.SetResult(reserves);
+        });
+
+        return await tcs.Task;
+    }
+    #endregion
+
+    #region Comentarios
+    public async void RegisterComment(string id_usuario, string id_hotel, string comentario, int calificacion)
+    {
+        //Registrar comentario en la base de datos en la colección "Comentarios"
+        //Y actualizar la calificación del hotel
+
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+
+        Debug.Log("Registrando comentario en la base de datos");
+        await db.Collection("Comentarios").AddAsync(new Dictionary<string, object>
+        {
+            {"id_usuario", id_usuario},
+            {"id_hotel", id_hotel},
+            {"comentario", comentario},
+            {"respuesta", "" },
+            {"calificacion", calificacion}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al registrar comentario: {task.Exception}");
+            }
+            Debug.Log("Comentario registrado exitosamente");
+        });
+
+        Debug.Log("Actualizando calificación del hotel en la base de datos");
+        await db.Collection("Hoteles").Document(id_hotel).UpdateAsync(new Dictionary<string, object>
+        {
+            {"calificacion", calificacion}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al actualizar calificación del hotel: {task.Exception}");
+            }
+            Debug.Log("Calificación del hotel actualizada exitosamente");
+        });
+    }
+
+    public async Task<List<CommentInformation>> GetCommentsOfHotel(string id_hotel)
+    {
+        //Traer todos los comentarios del hotel
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return null;
+        }
+        List<CommentInformation> comments = new List<CommentInformation>();
+        TaskCompletionSource<List<CommentInformation>> tcs = new TaskCompletionSource<List<CommentInformation>>();
+        await db.Collection("Comentarios").WhereEqualTo("id_hotel", id_hotel).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener comentarios de hotel: {task.Exception}");
+                tcs.SetException(task.Exception);
+                return;
+            }
+            QuerySnapshot snapshot = task.Result;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                comments.Add(new CommentInformation(document.Id, document.GetValue<string>("id_usuario"), document.GetValue<string>("id_hotel"),
+                                                    document.GetValue<string>("comentario"), document.GetValue<string>("respuesta"), document.GetValue<int>("calificacion")));
+            }
+            tcs.SetResult(comments);
+        });
+        return await tcs.Task;
+    }
+
+    public async Task<CommentInformation> GetCommentFromHotelOfUser(string id_user, string id_hotel)
+    {
+        //Traer el comentario del usuario en el hotel
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return null;
+        }
+        CommentInformation comment = null;
+        TaskCompletionSource<CommentInformation> tcs = new TaskCompletionSource<CommentInformation>();
+        await db.Collection("Comentarios").WhereEqualTo("id_usuario", id_user).WhereEqualTo("id_hotel", id_hotel).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al obtener comentario de hotel de usuario: {task.Exception}");
+                tcs.SetException(task.Exception);
+                return;
+            }
+            QuerySnapshot snapshot = task.Result;
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                comment = new CommentInformation(document.Id, document.GetValue<string>("id_usuario"), document.GetValue<string>("id_hotel"),
+                                                document.GetValue<string>("comentario"), document.GetValue<string>("respuesta"), document.GetValue<int>("calificacion"));
+            }
+            tcs.SetResult(comment);
+        });
+        return await tcs.Task;
+    }
+
+    public async void DeleteComment(string id_comment)
+    {
+        //Eliminar comentario de la base de datos
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+        Debug.Log("Eliminando comentario de la base de datos");
+        await db.Collection("Comentarios").Document(id_comment).DeleteAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al eliminar comentario: {task.Exception}");
+            }
+            Debug.Log("Comentario eliminado exitosamente");
+        });
+    }
+
+    public async void UpdateComment(string id_comment, string comentario, int calificacion)
+    {
+        //Actualizar comentario en la base de datos
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+        Debug.Log("Actualizando comentario en la base de datos");
+        await db.Collection("Comentarios").Document(id_comment).UpdateAsync(new Dictionary<string, object>
+        {
+            {"comentario", comentario},
+            {"calificacion", calificacion}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al actualizar comentario: {task.Exception}");
+            }
+            Debug.Log("Comentario actualizado exitosamente");
+        });
+
+        //Actualizar calificación del hotel
+        Debug.Log("Actualizando calificación del hotel en la base de datos");
+        await db.Collection("Hoteles").Document(id_comment).UpdateAsync(new Dictionary<string, object>
+        {
+            {"calificacion", calificacion}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al actualizar calificación del hotel: {task.Exception}");
+            }
+            Debug.Log("Calificación del hotel actualizada exitosamente");
+        });
+    }
+
+    public async void AnswerCommnent(string id_comentario, string respuesta)
+    {
+        //Actualizar comentario en la base de datos
+        if (Instance == null)
+        {
+            Debug.LogError("No se ha inicializado el DatabaseManager");
+            return;
+        }
+        Debug.Log("Actualizando comentario en la base de datos");
+        await db.Collection("Comentarios").Document(id_comentario).UpdateAsync(new Dictionary<string, object>
+        {
+            {"respuesta", respuesta}
+        }).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Error al actualizar comentario: {task.Exception}");
+            }
+            Debug.Log("Comentario actualizado exitosamente");
         });
     }
     #endregion

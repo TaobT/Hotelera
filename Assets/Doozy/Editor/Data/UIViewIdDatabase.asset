@@ -23,7 +23,11 @@ MonoBehaviour:
     - Category: HoteleraScene
       Name: FormHoteles
     - Category: HoteleraScene
+      Name: FormReserva
+    - Category: HoteleraScene
       Name: ListaHoteles
+    - Category: HoteleraScene
+      Name: ListaReservas
     - Category: LoginRegister
       Name: Login
     - Category: LoginRegister

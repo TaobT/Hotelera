@@ -23,6 +23,12 @@ MonoBehaviour:
     - Category: HoteleraScene
       Name: DeleteHotel
     - Category: HoteleraScene
+      Name: FormReserva
+    - Category: HoteleraScene
+      Name: ListaComentarios
+    - Category: HoteleraScene
+      Name: ListaReservas
+    - Category: HoteleraScene
       Name: ManageHotel
     - Category: HoteleraScene
       Name: NewHotel

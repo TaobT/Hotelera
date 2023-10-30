@@ -34,7 +34,9 @@ namespace Doozy.Runtime.UIManager
             ConfirmarBorrado,
             DetallesHotel,
             FormHoteles,
-            ListaHoteles
+            FormReserva,
+            ListaHoteles,
+            ListaReservas
         }
 
         public enum LoginRegister
